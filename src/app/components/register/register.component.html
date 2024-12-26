@@ -1,1 +1,115 @@
-<p>register works!</p>
+<div class="container">
+  <div class="card">
+    <h2 class="title">Create an Account</h2>
+    <p class="subtitle">Fill in your details to get started</p>
+
+    <!-- Form group for user registration -->
+    <form [formGroup]="form" (ngSubmit)="onRegister()" class="form">
+
+      <!-- Name input field with validation error message -->
+      <div class="form-group" [class.error]="name?.invalid && name?.dirty">
+        <label for="name">Full Name</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          placeholder="Enter your full name"
+          [class.error-input]="name?.invalid && name?.dirty"
+        />
+        <span class="error-message" *ngIf="name?.invalid && name?.dirty">
+          {{ getNameErrorMessage() }}
+        </span>
+      </div>
+
+      <!-- Email input field with validation error message -->
+      <div class="form-group" [class.error]="email?.invalid && email?.dirty">
+        <label for="email">Email address</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="name@company.com"
+          [class.error-input]="email?.invalid && email?.dirty"
+        />
+        <span class="error-message" *ngIf="email?.invalid && email?.dirty">
+          {{ getEmailErrorMessage() }}
+        </span>
+      </div>
+
+      <!-- Password input field with visibility toggle and validation -->
+      <div class="form-group" [class.error]="password?.invalid && password?.dirty">
+        <label for="password">Password</label>
+        <div class="password-input">
+          <input
+            [type]="isPasswordVisible ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            placeholder="Create a strong password"
+            autocomplete
+            [class.error-input]="password?.invalid && password?.dirty"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="isPasswordVisible = !isPasswordVisible"
+            [attr.aria-label]="isPasswordVisible ? 'Hide password' : 'Show password'"
+          >
+            {{ isPasswordVisible ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        <span class="error-message" *ngIf="password?.invalid && password?.dirty">
+          {{ getPasswordErrorMessage() }}
+        </span>
+
+        <!-- Password strength indicators -->
+        <div class="password-strength" *ngIf="password?.value">
+          <div class="strength-item" [class.met]="hasLowerCase(password?.value)">
+            Lowercase letter
+          </div>
+          <div class="strength-item" [class.met]="hasUpperCase(password?.value)">
+            Uppercase letter
+          </div>
+          <div class="strength-item" [class.met]="hasNumber(password?.value)">
+            Number
+          </div>
+          <div class="strength-item" [class.met]="password?.value?.length >= 8">
+            8+ characters
+          </div>
+        </div>
+      </div>
+
+      <!-- Checkbox to accept terms with validation -->
+      <div class="form-group" [class.error]="acceptTerms?.invalid && acceptTerms?.dirty">
+        <label class="terms">
+          <input type="checkbox" formControlName="acceptTerms">
+          I accept the <a href="/terms" target="_blank">Terms of Service</a> and
+          <a href="/privacy" target="_blank">Privacy Policy</a>
+        </label>
+        <span class="error-message" *ngIf="acceptTerms?.invalid && acceptTerms?.dirty">
+          You must accept the terms to continue
+        </span>
+      </div>
+
+      <!-- Error alert message, if any -->
+      <div class="error-alert" *ngIf="error">
+        {{ error }}
+      </div>
+
+      <!-- Submit button with loading state -->
+      <button
+        type="submit"
+        class="button"
+        [disabled]="form?.invalid || isLoading"
+        [class.loading]="isLoading"
+      >
+        {{ isLoading ? 'Creating account...' : 'Create account' }}
+      </button>
+    </form>
+
+    <!-- Prompt to navigate to login page -->
+    <p class="prompt">
+      Already have an account?
+      <a routerLink="/login">Sign in</a>
+    </p>
+  </div>
+</div>
