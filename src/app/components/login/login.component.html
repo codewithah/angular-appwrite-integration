@@ -1,1 +1,85 @@
-<p>login works!</p>
+<div class="container">
+  <div class="card">
+    <!-- Title and subtitle for the form -->
+    <h2 class="title">Welcome Back</h2>
+    <p class="subtitle">Please enter your details to sign in</p>
+
+    <!-- Form for login submission -->
+    <form [formGroup]="form" (ngSubmit)="onLogin()" class="form">
+
+      <!-- Email input field with validation error handling -->
+      <div class="form-group" [class.error]="email?.invalid && email?.dirty">
+        <label for="email">Email address</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="name@company.com"
+          [class.error-input]="email?.invalid && email?.dirty"
+        />
+        <span class="error-message" *ngIf="email?.invalid && email?.dirty">
+          {{ getEmailErrorMessage() }}
+        </span>
+      </div>
+
+      <!-- Password input field with toggle for visibility -->
+      <div class="form-group" [class.error]="password?.invalid && password?.dirty">
+        <label for="password">Password</label>
+        <div class="password-input">
+          <input
+            [type]="isPasswordVisible ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            autocomplete
+            placeholder="Enter your password"
+            [class.error-input]="password?.invalid && password?.dirty"
+          />
+          <!-- Button to toggle password visibility -->
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="isPasswordVisible = !isPasswordVisible"
+            [attr.aria-label]="isPasswordVisible ? 'Hide password' : 'Show password'"
+          >
+            {{ isPasswordVisible ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        <span class="error-message" *ngIf="password?.invalid && password?.dirty">
+          {{ getPasswordErrorMessage() }}
+        </span>
+      </div>
+
+      <!-- Form options like 'Remember me' checkbox and 'Forgot password' link -->
+      <div class="form-options">
+        <label class="remember-me">
+          <input type="checkbox" formControlName="rememberMe">
+          Remember me
+        </label>
+        <a href="/forgot-password" class="forgot-password">Forgot password?</a>
+      </div>
+
+      <!-- Submit button with loading state -->
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="button"
+          [disabled]="form?.invalid || isLoading"
+          [class.loading]="isLoading"
+        >
+          {{ isLoading ? 'Signing in...' : 'Sign in' }}
+        </button>
+      </div>
+
+      <!-- Error message alert if login fails -->
+      <div class="error-alert" *ngIf="error">
+        {{ error }}
+      </div>
+    </form>
+
+    <!-- Link to sign up page if the user doesn't have an account -->
+    <p class="prompt">
+      Don't have an account?
+      <a routerLink="/register">Sign up</a>
+    </p>
+  </div>
+</div>
